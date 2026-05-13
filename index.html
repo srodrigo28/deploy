@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Treinamento Deploy Android com Expo + EAS</title>
+  <title>Treinamento Deploy iOS com Expo + EAS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -298,7 +298,7 @@
             <i data-lucide="rocket" class="h-6 w-6 text-accent"></i>
             <h1 class="text-lg font-bold text-white">Expo Deploy</h1>
           </div>
-          <p class="text-xs text-muted">Treinamento Android com EAS</p>
+          <p class="text-xs text-muted">Treinamento iOS com EAS</p>
         </div>
         <button type="button" onclick="closeSidebar()" class="rounded-lg border border-white/10 bg-white/5 p-2 text-muted hover:border-white/20 hover:bg-white/10 hover:text-white md:hidden" aria-label="Fechar menu">
           <i data-lucide="x" class="h-5 w-5"></i>
@@ -329,16 +329,16 @@
         </button>
         <div class="nav-group-content">
           <div class="nav-group-inner space-y-1 px-2 pb-2">
-            <button type="button" data-step="step-google-account" onclick="showStep('step-google-account')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
-              <span class="block text-sm font-semibold text-white">02. Criar conta Google ✨</span>
+            <button type="button" data-step="step-apple-account" onclick="showStep('step-apple-account')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">02. Criar Apple ID ✨</span>
               <span class="block text-xs text-muted">Passo a passo detalhado</span>
             </button>
             <button type="button" data-step="step-security" onclick="showStep('step-security')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
               <span class="block text-sm font-semibold text-white">03. Segurança 🔐</span>
               <span class="block text-xs text-muted">Verificação em duas etapas</span>
             </button>
-            <button type="button" data-step="step-play-console" onclick="showStep('step-play-console')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
-              <span class="block text-sm font-semibold text-white">04. Play Console 🛒</span>
+            <button type="button" data-step="step-apple-developer" onclick="showStep('step-apple-developer')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">04. Apple Developer 🧾</span>
               <span class="block text-xs text-muted">Conta de desenvolvedor</span>
             </button>
           </div>
@@ -377,11 +377,11 @@
           <div class="nav-group-inner space-y-1 px-2 pb-2">
             <button type="button" data-step="step-credentials" onclick="showStep('step-credentials')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
               <span class="block text-sm font-semibold text-white">08. Credenciais 🔑</span>
-              <span class="block text-xs text-muted">Keystore e upload key</span>
+              <span class="block text-xs text-muted">Certificados e profiles</span>
             </button>
             <button type="button" data-step="step-build" onclick="showStep('step-build')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
-              <span class="block text-sm font-semibold text-white">09. Build Android 🏗️</span>
-              <span class="block text-xs text-muted">Gerar .aab ou .apk</span>
+              <span class="block text-sm font-semibold text-white">09. Build iOS 🏗️</span>
+              <span class="block text-xs text-muted">Gerar .ipa</span>
             </button>
             <button type="button" data-step="step-create-app" onclick="showStep('step-create-app')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
               <span class="block text-sm font-semibold text-white">10. Criar app 📱</span>
@@ -389,11 +389,15 @@
             </button>
             <button type="button" data-step="step-release" onclick="showStep('step-release')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
               <span class="block text-sm font-semibold text-white">11. Release 📝</span>
-              <span class="block text-xs text-muted">Upload e metadados</span>
+              <span class="block text-xs text-muted">EAS Submit ou Transporter</span>
             </button>
             <button type="button" data-step="step-review" onclick="showStep('step-review')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
-              <span class="block text-sm font-semibold text-white">12. Revisão ✅</span>
-              <span class="block text-xs text-muted">Teste ou produção</span>
+              <span class="block text-sm font-semibold text-white">12. TestFlight ✅</span>
+              <span class="block text-xs text-muted">Teste ou revisão</span>
+            </button>
+            <button type="button" data-step="step-approval" onclick="showStep('step-approval')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">13. Aprovação 🏁</span>
+              <span class="block text-xs text-muted">Publicar ou corrigir</span>
             </button>
           </div>
         </div>
@@ -405,7 +409,7 @@
     <header class="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-border bg-base/85 px-4 py-3 md:hidden">
       <div>
         <p class="text-[11px] uppercase tracking-[0.18em] text-muted">Treinamento</p>
-        <p class="text-sm font-semibold text-white">Deploy Android Expo</p>
+        <p class="text-sm font-semibold text-white">Deploy iOS Expo</p>
       </div>
       <button type="button" onclick="openSidebar()" class="rounded-lg border border-border bg-card px-3 py-2 text-white hover:border-accent hover:text-accent">
         <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide"><i data-lucide="menu" class="h-4 w-4"></i> Menu</span>
@@ -419,14 +423,14 @@
             <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-center">
               <div>
                 <span class="step-chip">🚀 Treinamento prático</span>
-                <h2 class="mt-4 text-4xl font-black tracking-tight text-white md:text-5xl">Deploy Android de uma aplicação Expo com EAS</h2>
-                <p class="mt-4 max-w-4xl text-base leading-8 text-slate-300">Uma trilha guiada para sair do app rodando com <code>expo start</code> e chegar em um build Android pronto para teste ou publicação no Google Play. O conteúdo segue o arquivo <strong>android-deploy.md</strong>, agora em formato de aula interativa.</p>
+                <h2 class="mt-4 text-4xl font-black tracking-tight text-white md:text-5xl">Deploy iOS de uma aplicação Expo com EAS</h2>
+                <p class="mt-4 max-w-4xl text-base leading-8 text-slate-300">Uma trilha guiada para sair do app rodando com <code>expo start</code> e chegar em um build iOS <code>.ipa</code> pronto para TestFlight ou publicação na App Store. O conteúdo segue o arquivo <strong>apple-deploy.ios.md</strong>, agora em formato de aula interativa.</p>
                 <div class="mt-5 flex flex-wrap gap-3">
-                  <button type="button" onclick="showStep('step-google-account')" class="code-action border-accent/40 bg-accent/15 text-white">
+                  <button type="button" onclick="showStep('step-apple-account')" class="code-action border-accent/40 bg-accent/15 text-white">
                     <i data-lucide="play" class="h-4 w-4"></i>
                     <span>Começar pelo passo 1</span>
                   </button>
-                  <button type="button" class="info-trigger inline-flex items-center gap-2 rounded-xl border border-info/25 bg-info/10 px-4 py-3 text-sm font-extrabold text-info" data-info-title="Como usar este treinamento" data-info-body="🧭 Use o menu lateral como roteiro de aula||✅ Leia cada etapa e marque mentalmente os pré-requisitos||📋 Copie os comandos quando chegar na parte do terminal||🛒 Só avance para o Play Console depois que o app Expo estiver configurado">
+                  <button type="button" class="info-trigger inline-flex items-center gap-2 rounded-xl border border-info/25 bg-info/10 px-4 py-3 text-sm font-extrabold text-info" data-info-title="Como usar este treinamento" data-info-body="🧭 Use o menu lateral como roteiro de aula||✅ Leia cada etapa e marque mentalmente os pré-requisitos||📋 Copie os comandos quando chegar na parte do terminal||🍎 Só avance para o App Store Connect depois que Apple ID, Developer Program e app Expo estiverem prontos">
                     <i data-lucide="sparkles" class="h-4 w-4"></i>
                     Como usar
                   </button>
@@ -436,13 +440,13 @@
                 <div class="relative z-10 space-y-4">
                   <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">Mapa rápido</p>
                   <div class="grid grid-cols-2 gap-3">
-                    <div class="metric-card"><p class="text-xs text-muted">Passos</p><p class="mt-1 text-4xl font-black text-white">12</p></div>
-                    <div class="metric-card"><p class="text-xs text-muted">Foco</p><p class="mt-2 text-lg font-black text-white">Android</p></div>
-                    <div class="metric-card"><p class="text-xs text-muted">Build</p><p class="mt-2 text-lg font-black text-white">.aab</p></div>
+                    <div class="metric-card"><p class="text-xs text-muted">Passos</p><p class="mt-1 text-4xl font-black text-white">13</p></div>
+                    <div class="metric-card"><p class="text-xs text-muted">Foco</p><p class="mt-2 text-lg font-black text-white">iOS</p></div>
+                    <div class="metric-card"><p class="text-xs text-muted">Build</p><p class="mt-2 text-lg font-black text-white">.ipa</p></div>
                     <div class="metric-card"><p class="text-xs text-muted">Ferramenta</p><p class="mt-2 text-lg font-black text-white">EAS</p></div>
                   </div>
                   <div class="rounded-2xl border border-border bg-base/60 p-4">
-                    <p class="text-sm leading-7 text-slate-300">🎯 Meta: publicar com segurança, sem pular conta Google, Play Console, credenciais e revisão.</p>
+                    <p class="text-sm leading-7 text-slate-300">🎯 Meta: publicar com segurança, sem pular Apple ID, Developer Program, credenciais, TestFlight e revisão.</p>
                   </div>
                 </div>
               </div>
@@ -450,17 +454,17 @@
           </div>
 
           <div class="grid gap-6 md:grid-cols-3">
-            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Conta e loja 🛒</h3><p class="mt-3 text-sm leading-7 text-muted">Você começa criando a base: conta Google, segurança e cadastro no Play Console.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Conta e loja 🍎</h3><p class="mt-3 text-sm leading-7 text-muted">Você começa criando a base: Apple ID, 2FA, Apple Developer e App Store Connect.</p></div>
             <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Projeto Expo ⚙️</h3><p class="mt-3 text-sm leading-7 text-muted">Depois ajusta identificador, versões, EAS CLI, login e configuração de build.</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Build e publicação 🚀</h3><p class="mt-3 text-sm leading-7 text-muted">Por fim, gera o arquivo, envia a release, preenche a ficha e acompanha a revisão.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Build e publicação 🚀</h3><p class="mt-3 text-sm leading-7 text-muted">Por fim, gera o .ipa, envia para a Apple, preenche metadados e acompanha aprovação.</p></div>
           </div>
         </section>
 
-        <section id="step-google-account" class="step-content space-y-6">
+        <section id="step-apple-account" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 1</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Como criar uma conta Google ✨</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">A conta Google será a identidade usada para entrar no Play Console, pagar a taxa de desenvolvedor e administrar os apps publicados. Para um app profissional, use uma conta que você consiga manter por muito tempo.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Como criar um Apple ID ✨</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">O Apple ID será a identidade usada para entrar no Apple Developer, acessar o App Store Connect e administrar apps publicados. Para um app profissional, use uma conta que você consiga manter por muito tempo.</p>
           </div>
 
           <div class="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)]">
@@ -470,11 +474,11 @@
                 <div class="timeline-line mt-5 space-y-5">
                   <div class="flex gap-3">
                     <span class="timeline-dot mt-2"></span>
-                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Acesse a página oficial:</strong> abra <a class="text-accent underline decoration-accent/40 underline-offset-4" href="https://accounts.google.com/signup" target="_blank" rel="noreferrer">accounts.google.com/signup</a>.</p>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Acesse a página oficial:</strong> abra <a class="text-accent underline decoration-accent/40 underline-offset-4" href="https://appleid.apple.com/" target="_blank" rel="noreferrer">appleid.apple.com</a>.</p>
                   </div>
                   <div class="flex gap-3">
                     <span class="timeline-dot mt-2"></span>
-                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Informe seus dados:</strong> nome, data de nascimento, gênero e o endereço de e-mail que será usado para acessar serviços Google.</p>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Informe seus dados:</strong> nome, país/região, data de nascimento e e-mail que será usado nos serviços Apple.</p>
                   </div>
                   <div class="flex gap-3">
                     <span class="timeline-dot mt-2"></span>
@@ -482,7 +486,7 @@
                   </div>
                   <div class="flex gap-3">
                     <span class="timeline-dot mt-2"></span>
-                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Adicione recuperação:</strong> telefone e e-mail de recuperação ajudam muito se você perder acesso ao Play Console.</p>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Adicione recuperação:</strong> telefone confiável e dados de recuperação ajudam muito se você perder acesso à conta.</p>
                   </div>
                   <div class="flex gap-3">
                     <span class="timeline-dot mt-2"></span>
@@ -508,28 +512,28 @@
                 <div class="phone-frame">
                   <div class="phone-screen">
                     <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                      <img src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg" alt="Google" class="h-6 w-auto" />
-                      <span class="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">Conta</span>
+                      <span class="text-sm font-black text-slate-950">Apple</span>
+                      <span class="rounded-full bg-slate-900 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">Apple ID</span>
                     </div>
                     <div class="space-y-3 p-4">
-                      <p class="text-lg font-black text-slate-950">Criar Conta Google</p>
+                      <p class="text-lg font-black text-slate-950">Criar Apple ID</p>
                       <div class="rounded-xl border border-slate-200 bg-white p-3">
                         <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Nome</p>
                         <p class="mt-1 h-2 w-24 rounded bg-slate-200"></p>
                       </div>
                       <div class="rounded-xl border border-slate-200 bg-white p-3">
-                        <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">E-mail</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">E-mail Apple ID</p>
                         <p class="mt-1 h-2 w-32 rounded bg-slate-200"></p>
                       </div>
                       <div class="rounded-xl border border-slate-200 bg-white p-3">
                         <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Senha</p>
                         <p class="mt-1 h-2 w-28 rounded bg-slate-200"></p>
                       </div>
-                      <div class="mt-5 rounded-xl bg-blue-600 px-4 py-3 text-center text-xs font-black text-white">Próxima etapa</div>
+                      <div class="mt-5 rounded-xl bg-slate-950 px-4 py-3 text-center text-xs font-black text-white">Continuar</div>
                     </div>
                   </div>
                 </div>
-                <p class="max-w-sm text-center text-xs leading-6 text-muted">Imagem de apoio: o objetivo é reconhecer os campos principais antes de avançar para segurança e Play Console.</p>
+                <p class="max-w-sm text-center text-xs leading-6 text-muted">Imagem de apoio: o objetivo é reconhecer os campos principais antes de avançar para 2FA e Apple Developer.</p>
               </div>
             </div>
           </div>
@@ -540,9 +544,9 @@
               <i data-lucide="chevron-down" class="collapse-chevron h-4 w-4 text-muted"></i>
             </summary>
             <div class="mt-4 grid gap-3 md:grid-cols-3">
-              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">A conta Google não é só login: ela vira dona da conta de desenvolvedor.</p>
-              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">A recuperação precisa estar atualizada porque publicações podem exigir validação.</p>
-              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">Para empresa, pense em governança: quem acessa, quem paga e quem mantém.</p>
+              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">O Apple ID não é só login: ele vira base de acesso ao Developer Program e App Store Connect.</p>
+              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">O telefone confiável precisa estar atualizado porque a Apple exige validações em logins e operações sensíveis.</p>
+              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">Para empresa, pense em governança: quem acessa, quem paga a anuidade e quem mantém os contratos.</p>
             </div>
           </details>
         </section>
@@ -550,42 +554,50 @@
         <section id="step-security" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 2</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Ativar verificação em duas etapas 🔐</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Antes de entrar no Play Console, proteja a conta. A publicação de apps mexe com identidade, pagamentos, permissões e usuários reais.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Ativar autenticação de dois fatores 🔐</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Antes de entrar no Apple Developer, proteja a conta. A autenticação de dois fatores é obrigatória para desenvolvimento iOS e publicação na App Store.</p>
           </div>
           <div class="grid gap-6 lg:grid-cols-3">
-            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">1️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Acesse Segurança</h3><p class="mt-3 text-sm leading-7 text-muted">Abra sua Conta Google, entre em Segurança e procure a verificação em duas etapas.</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">2️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Escolha o método</h3><p class="mt-3 text-sm leading-7 text-muted">Use app autenticador, chave de segurança ou confirmação no telefone.</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">3️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Salve códigos</h3><p class="mt-3 text-sm leading-7 text-muted">Guarde códigos de backup em local seguro para evitar bloqueio da conta.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">1️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Acesse segurança</h3><p class="mt-3 text-sm leading-7 text-muted">Abra os ajustes do Apple ID e revise telefone confiável, dispositivos confiáveis e senha.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">2️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Ative o 2FA</h3><p class="mt-3 text-sm leading-7 text-muted">Siga o fluxo da Apple para confirmar um número de telefone confiável e habilitar autenticação de dois fatores.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">3️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Teste o acesso</h3><p class="mt-3 text-sm leading-7 text-muted">Entre novamente no Apple Developer ou App Store Connect para confirmar que a validação funciona.</p></div>
           </div>
           <div class="rounded-3xl border border-info/25 bg-info/10 p-6">
-            <p class="text-sm leading-8 text-slate-300">🔗 Link de apoio: <a class="text-info underline decoration-info/40 underline-offset-4" href="https://myaccount.google.com/security" target="_blank" rel="noreferrer">myaccount.google.com/security</a></p>
+            <p class="text-sm leading-8 text-slate-300">🔗 Link de apoio: <a class="text-info underline decoration-info/40 underline-offset-4" href="https://appleid.apple.com/" target="_blank" rel="noreferrer">appleid.apple.com</a></p>
           </div>
         </section>
 
-        <section id="step-play-console" class="step-content space-y-6">
+        <section id="step-apple-developer" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 3</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Criar conta no Google Play Console 🛒</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Depois da conta Google, vem a conta de desenvolvedor. É nela que você cadastra apps, cria releases, envia o build e acompanha revisão.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Apple Developer e App Store Connect 🧾</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Depois do Apple ID, vem o Apple Developer Program. Em seguida, acesse o App Store Connect para aceitar termos, contratos e completar dados exigidos para publicação.</p>
           </div>
           <div class="grid gap-6 xl:grid-cols-2">
             <div class="rounded-3xl border border-border bg-card/70 p-6">
               <h3 class="text-xl font-bold text-white">Passos principais</h3>
               <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-                <p>1. Acesse <a class="text-accent underline decoration-accent/40 underline-offset-4" href="https://play.google.com/console" target="_blank" rel="noreferrer">play.google.com/console</a>.</p>
-                <p>2. Faça login com a conta Google criada.</p>
-                <p>3. Cadastre-se como desenvolvedor e pague a taxa única de registro.</p>
-                <p>4. Preencha nome, contato, endereço e dados exigidos pela conta.</p>
+                <p>1. Acesse <a class="text-accent underline decoration-accent/40 underline-offset-4" href="https://developer.apple.com/" target="_blank" rel="noreferrer">developer.apple.com</a>.</p>
+                <p>2. Entre com o Apple ID criado e com 2FA ativo.</p>
+                <p>3. Inscreva-se no Apple Developer Program.</p>
+                <p>4. Pague a anuidade de US$ 99/ano e complete os dados pessoais ou da empresa.</p>
               </div>
             </div>
             <div class="rounded-3xl border border-warm/25 bg-warm/10 p-6">
               <h3 class="text-xl font-bold text-white">Antes de pagar, confira</h3>
               <div class="mt-4 grid gap-3 text-sm leading-7 text-slate-300">
-                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">💳 Método de pagamento válido.</p>
+                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">💳 Método de pagamento válido para a anuidade.</p>
                 <p class="rounded-2xl border border-white/10 bg-base/35 p-4">📄 Dados pessoais ou empresariais corretos.</p>
-                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">📬 E-mail de contato que você acompanha.</p>
+                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">📬 E-mail e telefone de contato que você acompanha.</p>
               </div>
+            </div>
+          </div>
+          <div class="rounded-3xl border border-info/25 bg-info/10 p-6">
+            <h3 class="text-xl font-bold text-white">Configurar App Store Connect</h3>
+            <div class="mt-4 grid gap-3 text-sm leading-7 text-slate-300 md:grid-cols-3">
+              <p class="rounded-2xl border border-white/10 bg-base/35 p-4">1. Acesse <a class="text-info underline decoration-info/40 underline-offset-4" href="https://appstoreconnect.apple.com/" target="_blank" rel="noreferrer">appstoreconnect.apple.com</a>.</p>
+              <p class="rounded-2xl border border-white/10 bg-base/35 p-4">2. Aceite termos, contratos e políticas quando solicitado.</p>
+              <p class="rounded-2xl border border-white/10 bg-base/35 p-4">3. Complete contato, banco e impostos se for publicar o app.</p>
             </div>
           </div>
         </section>
@@ -594,7 +606,7 @@
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 4</p>
             <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Preparar o projeto Expo ⚙️</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Antes do build, confirme que o app roda localmente e que o arquivo de configuração tem nome, slug, pacote Android e versão.</p>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Antes do build, confirme que o app roda localmente e que o arquivo de configuração tem nome, slug, bundle identifier iOS e build number.</p>
           </div>
           <div class="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
             <div class="rounded-3xl border border-border bg-card/70 p-6">
@@ -603,8 +615,8 @@
                 <p>✅ O app abre com <code>expo start</code>.</p>
                 <p>✅ <code>expo.name</code> está definido.</p>
                 <p>✅ <code>expo.slug</code> está definido.</p>
-                <p>✅ <code>expo.android.package</code> usa formato como <code>com.seunome.app</code>.</p>
-                <p>✅ <code>versionCode</code> e <code>versionName</code> estão planejados.</p>
+                <p>✅ <code>expo.ios.bundleIdentifier</code> usa formato como <code>com.seunome.app</code>.</p>
+                <p>✅ <code>expo.ios.buildNumber</code> está planejado para uploads futuros.</p>
               </div>
             </div>
             <div class="code-shell">
@@ -619,9 +631,9 @@
   "expo": {
     "name": "Meu App",
     "slug": "meu-app",
-    "android": {
-      "package": "com.seunome.meuapp",
-      "versionCode": 1
+    "ios": {
+      "bundleIdentifier": "com.seunome.meuapp",
+      "buildNumber": "1"
     },
     "version": "1.0.0"
   }
@@ -658,7 +670,7 @@
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 6</p>
             <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Configurar EAS Build no projeto 🧰</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">No diretório do projeto, rode a configuração inicial e escolha Android quando o assistente perguntar a plataforma.</p>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">No diretório do projeto, rode a configuração inicial e escolha iOS quando o assistente perguntar a plataforma.</p>
           </div>
           <div class="code-shell">
             <div class="code-toolbar">
@@ -670,15 +682,15 @@
           <div class="grid gap-4 md:grid-cols-3">
             <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">development</p><p class="mt-2 text-sm leading-7 text-muted">Útil para desenvolvimento com cliente nativo.</p></div>
             <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">preview</p><p class="mt-2 text-sm leading-7 text-muted">Bom para teste interno fora da loja.</p></div>
-            <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5"><p class="text-sm font-bold text-white">production</p><p class="mt-2 text-sm leading-7 text-muted">Perfil usado para publicar no Google Play.</p></div>
+            <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5"><p class="text-sm font-bold text-white">production</p><p class="mt-2 text-sm leading-7 text-muted">Perfil usado para publicar na App Store.</p></div>
           </div>
         </section>
 
         <section id="step-credentials" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 7</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Configurar credenciais Android 🔑</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">O EAS pode gerar e gerenciar a keystore automaticamente. Para a maioria dos projetos, esse é o caminho mais simples no primeiro deploy.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Configurar credenciais Apple no EAS 🔑</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">O EAS pode gerar e gerenciar credenciais automaticamente durante o build. Para a maioria dos projetos, esse é o caminho mais simples no primeiro deploy iOS.</p>
           </div>
           <div class="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
             <div class="code-shell">
@@ -691,9 +703,9 @@
             <div class="rounded-3xl border border-border bg-card/70 p-6">
               <h3 class="text-xl font-bold text-white">O que aparece aqui?</h3>
               <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-                <p>🔐 <strong class="text-white">Keystore Android:</strong> usada para assinar o app.</p>
-                <p>🗝️ <strong class="text-white">Upload key:</strong> pode ser usada com Play App Signing.</p>
-                <p>🧭 <strong class="text-white">Gerenciamento automático:</strong> reduz chance de perder arquivos críticos.</p>
+                <p>🔐 <strong class="text-white">Certificado de distribuição:</strong> usado para assinar o app iOS.</p>
+                <p>🧾 <strong class="text-white">Provisioning profile:</strong> vincula app, bundle identifier e distribuição.</p>
+                <p>🗝️ <strong class="text-white">App Store Connect API key:</strong> opcional, útil para automatizar envio.</p>
               </div>
             </div>
           </div>
@@ -702,64 +714,69 @@
         <section id="step-build" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 8</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Fazer o build Android 🏗️</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Agora o EAS compila seu app nos servidores da Expo. Para Google Play, prefira gerar um arquivo <code>.aab</code>.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Fazer o build iOS com EAS 🏗️</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Agora o EAS compila seu app nos servidores da Expo. Para envio à Apple, o resultado esperado é um arquivo <code>.ipa</code>.</p>
           </div>
           <div class="code-shell">
             <div class="code-toolbar">
-              <span class="code-toolbar-label">Build de produção Android</span>
+              <span class="code-toolbar-label">Build de produção iOS</span>
               <div class="code-toolbar-actions">
                 <button type="button" class="code-action copy-trigger" data-copy-target="build-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button>
-                <button type="button" class="code-action expand-trigger" data-expand-title="Build Android" data-expand-target="build-code"><i data-lucide="file-code-2" class="h-4 w-4"></i><span>Expandir</span></button>
+                <button type="button" class="code-action expand-trigger" data-expand-title="Build iOS" data-expand-target="build-code"><i data-lucide="file-code-2" class="h-4 w-4"></i><span>Expandir</span></button>
               </div>
             </div>
-            <pre><code id="build-code">eas build --platform android --profile production</code></pre>
+            <pre><code id="build-code">eas build --platform ios --profile production</code></pre>
           </div>
           <div class="grid gap-4 md:grid-cols-3">
             <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">⏳ Aguarde</p><p class="mt-2 text-sm leading-7 text-muted">A compilação roda na nuvem e pode levar alguns minutos.</p></div>
             <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">🔗 Link final</p><p class="mt-2 text-sm leading-7 text-muted">O EAS retorna um link para baixar o build.</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">📦 Artefato</p><p class="mt-2 text-sm leading-7 text-muted">Use `.aab` para Google Play e `.apk` para testes manuais.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">📦 Artefato</p><p class="mt-2 text-sm leading-7 text-muted">Use o `.ipa` para envio ao App Store Connect.</p></div>
           </div>
         </section>
 
         <section id="step-create-app" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 9</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Criar o app no Google Play Console 📱</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">No Play Console, clique em criar app e informe os dados básicos: nome, idioma padrão, tipo de app e se ele é gratuito ou pago.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Criar o app no App Store Connect 📱</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">No App Store Connect, entre em Meus Apps, clique em “+” e crie um novo app usando o mesmo bundle ID definido no projeto Expo.</p>
           </div>
           <div class="grid gap-6 lg:grid-cols-4">
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">01</p><p class="mt-2 text-sm font-semibold text-white">Criar app</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">02</p><p class="mt-2 text-sm font-semibold text-white">Nome e idioma</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">03</p><p class="mt-2 text-sm font-semibold text-white">Tipo e categoria</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">04</p><p class="mt-2 text-sm font-semibold text-white">Política de privacidade</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">01</p><p class="mt-2 text-sm font-semibold text-white">Meus Apps &gt; Novo App</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">02</p><p class="mt-2 text-sm font-semibold text-white">Nome e idioma padrão</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">03</p><p class="mt-2 text-sm font-semibold text-white">Bundle ID igual ao Expo</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">04</p><p class="mt-2 text-sm font-semibold text-white">Plataforma iOS</p></div>
           </div>
         </section>
 
         <section id="step-release" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
             <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 10</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Enviar build, metadados e gráficos 📝</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">A release precisa do arquivo gerado pelo EAS, notas de versão e ficha da loja. Essa parte é onde o app começa a parecer público.</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Enviar o build para a Apple 📝</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Depois que o EAS gera o <code>.ipa</code>, envie o build ao App Store Connect. Você pode usar EAS Submit ou o app Transporter no macOS.</p>
           </div>
           <div class="grid gap-6 xl:grid-cols-2">
             <div class="rounded-3xl border border-border bg-card/70 p-6">
-              <h3 class="text-xl font-bold text-white">Release</h3>
+              <h3 class="text-xl font-bold text-white">Opção 1: EAS Submit</h3>
               <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-                <p>1. Acesse Release &gt; Produção ou Teste.</p>
-                <p>2. Crie uma nova release.</p>
-                <p>3. Faça upload do `.aab` recomendado.</p>
-                <p>4. Complete as notas de versão.</p>
-                <p>5. Salve e revise.</p>
+                <p>1. Execute o comando abaixo no projeto.</p>
+                <p>2. Escolha o build iOS gerado pelo EAS.</p>
+                <p>3. Siga o fluxo para enviar o <code>.ipa</code> ao App Store Connect.</p>
+              </div>
+              <div class="code-shell mt-5">
+                <div class="code-toolbar">
+                  <span class="code-toolbar-label">Enviar com EAS Submit</span>
+                  <div class="code-toolbar-actions"><button type="button" class="code-action copy-trigger" data-copy-target="submit-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button></div>
+                </div>
+                <pre><code id="submit-code">eas submit --platform ios</code></pre>
               </div>
             </div>
             <div class="rounded-3xl border border-info/25 bg-info/10 p-6">
-              <h3 class="text-xl font-bold text-white">Ficha da loja</h3>
+              <h3 class="text-xl font-bold text-white">Opção 2: Transporter</h3>
               <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-                <p>🖼️ Screenshots</p>
-                <p>📌 Ícone e recursos gráficos</p>
-                <p>📝 Descrição curta e completa</p>
-                <p>🔒 Privacidade, classificação e políticas</p>
+                <p>🍎 Use esta opção em um Mac.</p>
+                <p>📦 Baixe o <code>.ipa</code> gerado pelo EAS.</p>
+                <p>🚚 Abra o app Transporter e envie o arquivo para o App Store Connect.</p>
+                <p>🧭 Aguarde o processamento antes de usar o build em TestFlight ou revisão.</p>
               </div>
             </div>
           </div>
@@ -767,24 +784,42 @@
 
         <section id="step-review" class="step-content space-y-6">
           <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
-            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-info">Fechamento</p>
-            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Liberar para teste ou produção ✅</h2>
-            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Você pode publicar primeiro em teste interno, fechado ou aberto. Depois de validar, envie para produção e acompanhe a revisão do Google Play.</p>
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-info">Passos 11 e 12</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Configurar metadados, screenshots e TestFlight ✅</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Com o build processado no App Store Connect, complete os dados da página do app e escolha se vai testar primeiro pelo TestFlight ou enviar direto para revisão.</p>
           </div>
           <div class="grid gap-4 md:grid-cols-3">
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">🧪 Teste interno</p><p class="mt-2 text-sm leading-7 text-muted">Ideal para validar instalação e fluxo principal.</p></div>
-            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">👥 Teste fechado/aberto</p><p class="mt-2 text-sm leading-7 text-muted">Bom para ampliar validação com usuários selecionados.</p></div>
-            <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5"><p class="text-sm font-bold text-white">🚀 Produção</p><p class="mt-2 text-sm leading-7 text-muted">Envie quando metadados, política e build estiverem prontos.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">🧪 TestFlight interno</p><p class="mt-2 text-sm leading-7 text-muted">Ideal para validar instalação, login e fluxo principal com a equipe.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">👥 TestFlight externo</p><p class="mt-2 text-sm leading-7 text-muted">Bom para ampliar validação com usuários selecionados antes da App Store.</p></div>
+            <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5"><p class="text-sm font-bold text-white">🚀 Submit for Review</p><p class="mt-2 text-sm leading-7 text-muted">Envie quando metadados, privacidade, classificação e build estiverem prontos.</p></div>
           </div>
           <div class="rounded-3xl border border-border bg-base/55 p-6">
-            <p class="text-sm leading-8 text-slate-300">Se houver pendências na revisão, corrija o item apontado pelo console, gere uma nova versão quando necessário e reenvie a release.</p>
+            <div class="grid gap-3 text-sm leading-7 text-slate-300 md:grid-cols-2">
+              <p>📝 Descrição, texto promocional e keywords.</p>
+              <p>🖼️ Screenshots para iPhone e, quando necessário, iPad.</p>
+              <p>🔒 Suporte, política de privacidade e informações de privacidade.</p>
+              <p>🎂 Classificação etária e demais declarações exigidas.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-approval" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-info">Fechamento</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Aguardar aprovação e publicar 🏁</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">A Apple fará a análise do app. Quando aprovado, você poderá publicar na App Store. Se houver rejeição, corrija os problemas e reenvie o build ou os metadados necessários.</p>
+          </div>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">⏳ Revisão Apple</p><p class="mt-2 text-sm leading-7 text-muted">Acompanhe o status no App Store Connect e responda pendências quando aparecerem.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">✅ Aprovado</p><p class="mt-2 text-sm leading-7 text-muted">Publique manualmente ou use a opção de liberação automática configurada no envio.</p></div>
+            <div class="rounded-2xl border border-danger/25 bg-danger/10 p-5"><p class="text-sm font-bold text-white">🛠️ Rejeitado</p><p class="mt-2 text-sm leading-7 text-muted">Corrija o item apontado, gere nova versão quando necessário e envie novamente.</p></div>
           </div>
           <div class="rounded-3xl border border-border bg-card/70 p-6">
             <h3 class="text-xl font-bold text-white">Referências oficiais</h3>
             <div class="mt-4 grid gap-3 text-sm leading-7 text-slate-300 md:grid-cols-2">
-              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://support.google.com/accounts/answer/27441" target="_blank" rel="noreferrer">Criar uma Conta Google</a>
-              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://support.google.com/accounts/answer/185839" target="_blank" rel="noreferrer">Verificação em duas etapas</a>
-              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://play.google.com/console" target="_blank" rel="noreferrer">Google Play Console</a>
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://appleid.apple.com/" target="_blank" rel="noreferrer">Criar ou gerenciar Apple ID</a>
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://developer.apple.com/" target="_blank" rel="noreferrer">Apple Developer</a>
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://appstoreconnect.apple.com/" target="_blank" rel="noreferrer">App Store Connect</a>
               <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://docs.expo.dev/build/setup/" target="_blank" rel="noreferrer">Expo EAS Build</a>
             </div>
           </div>
