@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Treinamento Deploy Android com Expo + EAS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: "#08111f",
+            panel: "#122033",
+            card: "#16283f",
+            border: "#29435f",
+            text: "#e2e8f0",
+            muted: "#cbd5e1",
+            accent: "#22c55e",
+            info: "#14b8a6",
+            warm: "#f59e0b",
+            danger: "#fb7185"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --font-body: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+      --font-display: "Sora", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      background:
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.14), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(20, 184, 166, 0.12), transparent 34%),
+        #08111f;
+    }
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+    p { text-wrap: pretty; }
+    body .text-muted { color: #d6e0ec !important; }
+    body .text-slate-400 { color: #dbe7f5 !important; }
+    body .text-slate-300 { color: #edf4fb !important; }
+    button { font-family: var(--font-body); }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    .nav-group-toggle {
+      border-radius: 1rem;
+      color: #e5eef8 !important;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    .nav-group-toggle:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff !important;
+    }
+    .nav-item {
+      border-color: rgba(255, 255, 255, 0.04);
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+    .nav-item:hover { border-color: rgba(148, 163, 184, 0.2); }
+    .nav-item.active {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.35);
+      color: white;
+    }
+    .nav-group-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.2s ease; }
+    .nav-group.open .nav-group-content { grid-template-rows: 1fr; }
+    .nav-group-inner { overflow: hidden; }
+    .nav-group-toggle .chevron { transition: transform 0.2s ease; }
+    .nav-group.open .nav-group-toggle .chevron { transform: rotate(180deg); }
+    #sidebar-drawer {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 40;
+      width: min(21rem, 88vw);
+      transform: translateX(-100%);
+      transition: transform 0.22s ease;
+    }
+    #sidebar-drawer.open { transform: translateX(0); }
+    @media (min-width: 768px) {
+      #sidebar-drawer { position: static; width: 20rem; height: 100vh; transform: translateX(0); }
+    }
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      border-radius: 1rem;
+      border: 1px solid #29435f;
+      background: rgba(8, 17, 31, 0.88);
+      padding: 1rem;
+    }
+    code {
+      font-family: "Fira Code", "Courier New", monospace;
+      font-size: 0.88rem;
+      color: #dbeafe;
+    }
+    .code-shell {
+      min-width: 0;
+      max-width: 100%;
+      border-radius: 1rem;
+      border: 1px solid rgba(41, 67, 95, 0.7);
+      overflow: hidden;
+      background: rgba(8, 17, 31, 0.44);
+    }
+    .code-toolbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(41, 67, 95, 0.7);
+      background: rgba(15, 23, 42, 0.78);
+      padding: 0.7rem 0.9rem;
+    }
+    .code-toolbar-label {
+      min-width: 0;
+      flex: 1 1 10rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #d6e0ec;
+      overflow-wrap: anywhere;
+    }
+    .code-toolbar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .code-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(41, 67, 95, 0.9);
+      background: rgba(22, 40, 63, 0.92);
+      padding: 0.45rem 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+    }
+    .code-action:hover {
+      border-color: rgba(34, 197, 94, 0.45);
+      background: rgba(34, 197, 94, 0.12);
+      color: #ffffff;
+    }
+    .info-trigger {
+      color: #f8fafc !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+    .info-trigger:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff !important;
+    }
+    .section-soft {
+      background: linear-gradient(180deg, rgba(22, 40, 63, 0.82), rgba(8, 17, 31, 0.74));
+      box-shadow: 0 18px 40px rgba(2, 6, 23, 0.18);
+    }
+    .metric-card {
+      border-radius: 1rem;
+      border: 1px solid rgba(41, 67, 95, 0.78);
+      background: rgba(8, 17, 31, 0.42);
+      padding: 1rem;
+    }
+    .visual-panel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.5rem;
+      border: 1px solid rgba(34, 197, 94, 0.18);
+      background:
+        linear-gradient(145deg, rgba(8, 17, 31, 0.92), rgba(22, 40, 63, 0.8)),
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.16), transparent 30%);
+      min-height: 19rem;
+    }
+    .visual-panel::before {
+      content: "";
+      position: absolute;
+      inset: -30% -20% auto auto;
+      height: 15rem;
+      width: 15rem;
+      border-radius: 999px;
+      background: rgba(20, 184, 166, 0.14);
+      filter: blur(10px);
+    }
+    .phone-frame {
+      width: min(15rem, 100%);
+      border-radius: 2rem;
+      border: 1px solid rgba(226, 232, 240, 0.16);
+      background: #0b1525;
+      padding: 0.8rem;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+    }
+    .phone-screen {
+      border-radius: 1.4rem;
+      border: 1px solid rgba(41, 67, 95, 0.88);
+      background: #f8fafc;
+      color: #0f172a;
+      min-height: 18rem;
+      overflow: hidden;
+    }
+    .step-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.22);
+      background: rgba(34, 197, 94, 0.1);
+      padding: 0.35rem 0.7rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #86efac;
+    }
+    .timeline-line {
+      position: relative;
+      padding-left: 1.25rem;
+    }
+    .timeline-line::before {
+      content: "";
+      position: absolute;
+      left: 0.32rem;
+      top: 0.65rem;
+      bottom: 0.65rem;
+      width: 1px;
+      background: rgba(34, 197, 94, 0.26);
+    }
+    .timeline-dot {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      height: 0.7rem;
+      width: 0.7rem;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.12);
+    }
+    .mini-collapse {
+      border-radius: 1rem;
+      border: 1px solid rgba(41, 67, 95, 0.78);
+      background: rgba(8, 17, 31, 0.42);
+      padding: 1rem;
+    }
+    .mini-collapse summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      list-style: none;
+    }
+    .mini-collapse summary::-webkit-details-marker { display: none; }
+    .mini-collapse .collapse-chevron { transition: transform 0.18s ease; }
+    .mini-collapse[open] .collapse-chevron { transform: rotate(180deg); }
+    .code-shell pre { border: 0; border-radius: 0; }
+    .code-modal-pre {
+      max-height: calc(100vh - 8rem);
+      overflow: auto;
+      border-radius: 1rem;
+      border: 1px solid #29435f;
+      background: rgba(8, 17, 31, 0.96);
+      padding: 1rem;
+    }
+    .code-modal-pre code {
+      white-space: pre;
+      display: block;
+      min-width: max-content;
+    }
+    @media (min-width: 640px) {
+      .code-toolbar { align-items: center; }
+      .code-toolbar-actions { width: auto; }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-text flex overflow-x-hidden">
+  <div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-slate-950/70 md:hidden" onclick="closeSidebar()"></div>
+
+  <aside id="sidebar-drawer" class="bg-panel border-r border-border flex flex-col h-screen shadow-2xl">
+    <div class="border-b border-border bg-base/70 p-6">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <div class="mb-1 flex items-center gap-2">
+            <i data-lucide="rocket" class="h-6 w-6 text-accent"></i>
+            <h1 class="text-lg font-bold text-white">Expo Deploy</h1>
+          </div>
+          <p class="text-xs text-muted">Treinamento Android com EAS</p>
+        </div>
+        <button type="button" onclick="closeSidebar()" class="rounded-lg border border-white/10 bg-white/5 p-2 text-muted hover:border-white/20 hover:bg-white/10 hover:text-white md:hidden" aria-label="Fechar menu">
+          <i data-lucide="x" class="h-5 w-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <nav class="flex-1 space-y-3 overflow-y-auto p-4">
+      <div class="nav-group open rounded-2xl border border-white/5 bg-base/40" data-group="inicio">
+        <button type="button" onclick="toggleNavGroup('inicio')" class="nav-group-toggle flex w-full items-center justify-between px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.18em] text-muted hover:text-white">
+          <span class="flex items-center gap-2"><i data-lucide="map" class="h-3.5 w-3.5"></i> Início</span>
+          <i data-lucide="chevron-down" class="chevron h-4 w-4"></i>
+        </button>
+        <div class="nav-group-content">
+          <div class="nav-group-inner space-y-1 px-2 pb-2">
+            <button type="button" data-step="step-intro" onclick="showStep('step-intro')" class="nav-item active w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">01. Visão geral 🚀</span>
+              <span class="block text-xs text-muted">Mapa do treinamento</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-group open rounded-2xl border border-white/5 bg-base/40" data-group="contas">
+        <button type="button" onclick="toggleNavGroup('contas')" class="nav-group-toggle flex w-full items-center justify-between px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.18em] text-muted hover:text-white">
+          <span class="flex items-center gap-2"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i> Contas</span>
+          <i data-lucide="chevron-down" class="chevron h-4 w-4"></i>
+        </button>
+        <div class="nav-group-content">
+          <div class="nav-group-inner space-y-1 px-2 pb-2">
+            <button type="button" data-step="step-google-account" onclick="showStep('step-google-account')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">02. Criar conta Google ✨</span>
+              <span class="block text-xs text-muted">Passo a passo detalhado</span>
+            </button>
+            <button type="button" data-step="step-security" onclick="showStep('step-security')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">03. Segurança 🔐</span>
+              <span class="block text-xs text-muted">Verificação em duas etapas</span>
+            </button>
+            <button type="button" data-step="step-play-console" onclick="showStep('step-play-console')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">04. Play Console 🛒</span>
+              <span class="block text-xs text-muted">Conta de desenvolvedor</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-group open rounded-2xl border border-white/5 bg-base/40" data-group="projeto">
+        <button type="button" onclick="toggleNavGroup('projeto')" class="nav-group-toggle flex w-full items-center justify-between px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.18em] text-muted hover:text-white">
+          <span class="flex items-center gap-2"><i data-lucide="layers-3" class="h-3.5 w-3.5"></i> Projeto</span>
+          <i data-lucide="chevron-down" class="chevron h-4 w-4"></i>
+        </button>
+        <div class="nav-group-content">
+          <div class="nav-group-inner space-y-1 px-2 pb-2">
+            <button type="button" data-step="step-project" onclick="showStep('step-project')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">05. Preparar Expo ⚙️</span>
+              <span class="block text-xs text-muted">app.json ou app.config.js</span>
+            </button>
+            <button type="button" data-step="step-expo-login" onclick="showStep('step-expo-login')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">06. Login no Expo 👤</span>
+              <span class="block text-xs text-muted">Conta e terminal</span>
+            </button>
+            <button type="button" data-step="step-eas-config" onclick="showStep('step-eas-config')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">07. EAS Build 🧰</span>
+              <span class="block text-xs text-muted">Configuração inicial</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-group open rounded-2xl border border-white/5 bg-base/40" data-group="publicacao">
+        <button type="button" onclick="toggleNavGroup('publicacao')" class="nav-group-toggle flex w-full items-center justify-between px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.18em] text-muted hover:text-white">
+          <span class="flex items-center gap-2"><i data-lucide="send" class="h-3.5 w-3.5"></i> Publicação</span>
+          <i data-lucide="chevron-down" class="chevron h-4 w-4"></i>
+        </button>
+        <div class="nav-group-content">
+          <div class="nav-group-inner space-y-1 px-2 pb-2">
+            <button type="button" data-step="step-credentials" onclick="showStep('step-credentials')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">08. Credenciais 🔑</span>
+              <span class="block text-xs text-muted">Keystore e upload key</span>
+            </button>
+            <button type="button" data-step="step-build" onclick="showStep('step-build')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">09. Build Android 🏗️</span>
+              <span class="block text-xs text-muted">Gerar .aab ou .apk</span>
+            </button>
+            <button type="button" data-step="step-create-app" onclick="showStep('step-create-app')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">10. Criar app 📱</span>
+              <span class="block text-xs text-muted">Cadastro no console</span>
+            </button>
+            <button type="button" data-step="step-release" onclick="showStep('step-release')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">11. Release 📝</span>
+              <span class="block text-xs text-muted">Upload e metadados</span>
+            </button>
+            <button type="button" data-step="step-review" onclick="showStep('step-review')" class="nav-item w-full rounded-xl border border-transparent px-4 py-3 text-left hover:bg-white/5">
+              <span class="block text-sm font-semibold text-white">12. Revisão ✅</span>
+              <span class="block text-xs text-muted">Teste ou produção</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="min-w-0 flex-1 h-screen overflow-y-auto">
+    <header class="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-border bg-base/85 px-4 py-3 md:hidden">
+      <div>
+        <p class="text-[11px] uppercase tracking-[0.18em] text-muted">Treinamento</p>
+        <p class="text-sm font-semibold text-white">Deploy Android Expo</p>
+      </div>
+      <button type="button" onclick="openSidebar()" class="rounded-lg border border-border bg-card px-3 py-2 text-white hover:border-accent hover:text-accent">
+        <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide"><i data-lucide="menu" class="h-4 w-4"></i> Menu</span>
+      </button>
+    </header>
+
+    <div class="px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-8 xl:px-10 xl:py-10">
+      <div class="mx-auto w-full max-w-[96rem] space-y-8 pb-20">
+        <section id="step-intro" class="step-content active space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/80 p-6 sm:p-7 lg:p-8">
+            <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-center">
+              <div>
+                <span class="step-chip">🚀 Treinamento prático</span>
+                <h2 class="mt-4 text-4xl font-black tracking-tight text-white md:text-5xl">Deploy Android de uma aplicação Expo com EAS</h2>
+                <p class="mt-4 max-w-4xl text-base leading-8 text-slate-300">Uma trilha guiada para sair do app rodando com <code>expo start</code> e chegar em um build Android pronto para teste ou publicação no Google Play. O conteúdo segue o arquivo <strong>android-deploy.md</strong>, agora em formato de aula interativa.</p>
+                <div class="mt-5 flex flex-wrap gap-3">
+                  <button type="button" onclick="showStep('step-google-account')" class="code-action border-accent/40 bg-accent/15 text-white">
+                    <i data-lucide="play" class="h-4 w-4"></i>
+                    <span>Começar pelo passo 1</span>
+                  </button>
+                  <button type="button" class="info-trigger inline-flex items-center gap-2 rounded-xl border border-info/25 bg-info/10 px-4 py-3 text-sm font-extrabold text-info" data-info-title="Como usar este treinamento" data-info-body="🧭 Use o menu lateral como roteiro de aula||✅ Leia cada etapa e marque mentalmente os pré-requisitos||📋 Copie os comandos quando chegar na parte do terminal||🛒 Só avance para o Play Console depois que o app Expo estiver configurado">
+                    <i data-lucide="sparkles" class="h-4 w-4"></i>
+                    Como usar
+                  </button>
+                </div>
+              </div>
+              <div class="visual-panel p-5">
+                <div class="relative z-10 space-y-4">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">Mapa rápido</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="metric-card"><p class="text-xs text-muted">Passos</p><p class="mt-1 text-4xl font-black text-white">12</p></div>
+                    <div class="metric-card"><p class="text-xs text-muted">Foco</p><p class="mt-2 text-lg font-black text-white">Android</p></div>
+                    <div class="metric-card"><p class="text-xs text-muted">Build</p><p class="mt-2 text-lg font-black text-white">.aab</p></div>
+                    <div class="metric-card"><p class="text-xs text-muted">Ferramenta</p><p class="mt-2 text-lg font-black text-white">EAS</p></div>
+                  </div>
+                  <div class="rounded-2xl border border-border bg-base/60 p-4">
+                    <p class="text-sm leading-7 text-slate-300">🎯 Meta: publicar com segurança, sem pular conta Google, Play Console, credenciais e revisão.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid gap-6 md:grid-cols-3">
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Conta e loja 🛒</h3><p class="mt-3 text-sm leading-7 text-muted">Você começa criando a base: conta Google, segurança e cadastro no Play Console.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Projeto Expo ⚙️</h3><p class="mt-3 text-sm leading-7 text-muted">Depois ajusta identificador, versões, EAS CLI, login e configuração de build.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><h3 class="text-lg font-semibold text-white">Build e publicação 🚀</h3><p class="mt-3 text-sm leading-7 text-muted">Por fim, gera o arquivo, envia a release, preenche a ficha e acompanha a revisão.</p></div>
+          </div>
+        </section>
+
+        <section id="step-google-account" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 1</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Como criar uma conta Google ✨</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">A conta Google será a identidade usada para entrar no Play Console, pagar a taxa de desenvolvedor e administrar os apps publicados. Para um app profissional, use uma conta que você consiga manter por muito tempo.</p>
+          </div>
+
+          <div class="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)]">
+            <div class="space-y-6">
+              <div class="rounded-3xl border border-border bg-card/70 p-6">
+                <h3 class="text-xl font-bold text-white">Roteiro guiado</h3>
+                <div class="timeline-line mt-5 space-y-5">
+                  <div class="flex gap-3">
+                    <span class="timeline-dot mt-2"></span>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Acesse a página oficial:</strong> abra <a class="text-accent underline decoration-accent/40 underline-offset-4" href="https://accounts.google.com/signup" target="_blank" rel="noreferrer">accounts.google.com/signup</a>.</p>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="timeline-dot mt-2"></span>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Informe seus dados:</strong> nome, data de nascimento, gênero e o endereço de e-mail que será usado para acessar serviços Google.</p>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="timeline-dot mt-2"></span>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Crie uma senha forte:</strong> misture letras, números e símbolos. Evite a mesma senha de redes sociais ou e-mail pessoal.</p>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="timeline-dot mt-2"></span>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Adicione recuperação:</strong> telefone e e-mail de recuperação ajudam muito se você perder acesso ao Play Console.</p>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="timeline-dot mt-2"></span>
+                    <p class="text-sm leading-7 text-slate-300"><strong class="text-white">Revise e aceite os termos:</strong> confira se os dados estão corretos antes de finalizar.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5">
+                  <p class="text-lg font-bold text-white">✅ Boa prática</p>
+                  <p class="mt-3 text-sm leading-7 text-slate-300">Use uma conta dedicada ao projeto ou à empresa. Isso evita misturar arquivos pessoais com permissões de publicação.</p>
+                </div>
+                <div class="rounded-2xl border border-warm/25 bg-warm/10 p-5">
+                  <p class="text-lg font-bold text-white">⚠️ Atenção</p>
+                  <p class="mt-3 text-sm leading-7 text-slate-300">Guarde acesso ao telefone e e-mail de recuperação. Eles podem ser exigidos em logins futuros.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="visual-panel p-5">
+              <div class="relative z-10 flex h-full flex-col items-center justify-center gap-5">
+                <div class="phone-frame">
+                  <div class="phone-screen">
+                    <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+                      <img src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg" alt="Google" class="h-6 w-auto" />
+                      <span class="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">Conta</span>
+                    </div>
+                    <div class="space-y-3 p-4">
+                      <p class="text-lg font-black text-slate-950">Criar Conta Google</p>
+                      <div class="rounded-xl border border-slate-200 bg-white p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Nome</p>
+                        <p class="mt-1 h-2 w-24 rounded bg-slate-200"></p>
+                      </div>
+                      <div class="rounded-xl border border-slate-200 bg-white p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">E-mail</p>
+                        <p class="mt-1 h-2 w-32 rounded bg-slate-200"></p>
+                      </div>
+                      <div class="rounded-xl border border-slate-200 bg-white p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-slate-500">Senha</p>
+                        <p class="mt-1 h-2 w-28 rounded bg-slate-200"></p>
+                      </div>
+                      <div class="mt-5 rounded-xl bg-blue-600 px-4 py-3 text-center text-xs font-black text-white">Próxima etapa</div>
+                    </div>
+                  </div>
+                </div>
+                <p class="max-w-sm text-center text-xs leading-6 text-muted">Imagem de apoio: o objetivo é reconhecer os campos principais antes de avançar para segurança e Play Console.</p>
+              </div>
+            </div>
+          </div>
+
+          <details class="mini-collapse">
+            <summary>
+              <span class="text-sm font-bold text-white">🧠 O que explicar para a turma neste passo?</span>
+              <i data-lucide="chevron-down" class="collapse-chevron h-4 w-4 text-muted"></i>
+            </summary>
+            <div class="mt-4 grid gap-3 md:grid-cols-3">
+              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">A conta Google não é só login: ela vira dona da conta de desenvolvedor.</p>
+              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">A recuperação precisa estar atualizada porque publicações podem exigir validação.</p>
+              <p class="rounded-2xl border border-border bg-card/70 p-4 text-sm leading-7 text-slate-300">Para empresa, pense em governança: quem acessa, quem paga e quem mantém.</p>
+            </div>
+          </details>
+        </section>
+
+        <section id="step-security" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 2</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Ativar verificação em duas etapas 🔐</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Antes de entrar no Play Console, proteja a conta. A publicação de apps mexe com identidade, pagamentos, permissões e usuários reais.</p>
+          </div>
+          <div class="grid gap-6 lg:grid-cols-3">
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">1️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Acesse Segurança</h3><p class="mt-3 text-sm leading-7 text-muted">Abra sua Conta Google, entre em Segurança e procure a verificação em duas etapas.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">2️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Escolha o método</h3><p class="mt-3 text-sm leading-7 text-muted">Use app autenticador, chave de segurança ou confirmação no telefone.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-6"><p class="text-2xl">3️⃣</p><h3 class="mt-3 text-lg font-bold text-white">Salve códigos</h3><p class="mt-3 text-sm leading-7 text-muted">Guarde códigos de backup em local seguro para evitar bloqueio da conta.</p></div>
+          </div>
+          <div class="rounded-3xl border border-info/25 bg-info/10 p-6">
+            <p class="text-sm leading-8 text-slate-300">🔗 Link de apoio: <a class="text-info underline decoration-info/40 underline-offset-4" href="https://myaccount.google.com/security" target="_blank" rel="noreferrer">myaccount.google.com/security</a></p>
+          </div>
+        </section>
+
+        <section id="step-play-console" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 3</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Criar conta no Google Play Console 🛒</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Depois da conta Google, vem a conta de desenvolvedor. É nela que você cadastra apps, cria releases, envia o build e acompanha revisão.</p>
+          </div>
+          <div class="grid gap-6 xl:grid-cols-2">
+            <div class="rounded-3xl border border-border bg-card/70 p-6">
+              <h3 class="text-xl font-bold text-white">Passos principais</h3>
+              <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+                <p>1. Acesse <a class="text-accent underline decoration-accent/40 underline-offset-4" href="https://play.google.com/console" target="_blank" rel="noreferrer">play.google.com/console</a>.</p>
+                <p>2. Faça login com a conta Google criada.</p>
+                <p>3. Cadastre-se como desenvolvedor e pague a taxa única de registro.</p>
+                <p>4. Preencha nome, contato, endereço e dados exigidos pela conta.</p>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-warm/25 bg-warm/10 p-6">
+              <h3 class="text-xl font-bold text-white">Antes de pagar, confira</h3>
+              <div class="mt-4 grid gap-3 text-sm leading-7 text-slate-300">
+                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">💳 Método de pagamento válido.</p>
+                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">📄 Dados pessoais ou empresariais corretos.</p>
+                <p class="rounded-2xl border border-white/10 bg-base/35 p-4">📬 E-mail de contato que você acompanha.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-project" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 4</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Preparar o projeto Expo ⚙️</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Antes do build, confirme que o app roda localmente e que o arquivo de configuração tem nome, slug, pacote Android e versão.</p>
+          </div>
+          <div class="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+            <div class="rounded-3xl border border-border bg-card/70 p-6">
+              <h3 class="text-xl font-bold text-white">Checklist</h3>
+              <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+                <p>✅ O app abre com <code>expo start</code>.</p>
+                <p>✅ <code>expo.name</code> está definido.</p>
+                <p>✅ <code>expo.slug</code> está definido.</p>
+                <p>✅ <code>expo.android.package</code> usa formato como <code>com.seunome.app</code>.</p>
+                <p>✅ <code>versionCode</code> e <code>versionName</code> estão planejados.</p>
+              </div>
+            </div>
+            <div class="code-shell">
+              <div class="code-toolbar">
+                <span class="code-toolbar-label">app.json exemplo</span>
+                <div class="code-toolbar-actions">
+                  <button type="button" class="code-action copy-trigger" data-copy-target="app-json-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button>
+                  <button type="button" class="code-action expand-trigger" data-expand-title="app.json exemplo" data-expand-target="app-json-code"><i data-lucide="file-code-2" class="h-4 w-4"></i><span>Expandir</span></button>
+                </div>
+              </div>
+              <pre><code id="app-json-code">{
+  "expo": {
+    "name": "Meu App",
+    "slug": "meu-app",
+    "android": {
+      "package": "com.seunome.meuapp",
+      "versionCode": 1
+    },
+    "version": "1.0.0"
+  }
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-expo-login" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 5</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Instalar EAS CLI e fazer login no Expo 👤</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">O EAS CLI é a ferramenta que conversa com os servidores da Expo para configurar credenciais, gerar builds e enviar releases.</p>
+          </div>
+          <div class="grid gap-6 xl:grid-cols-2">
+            <div class="code-shell">
+              <div class="code-toolbar">
+                <span class="code-toolbar-label">Instalar EAS CLI</span>
+                <div class="code-toolbar-actions"><button type="button" class="code-action copy-trigger" data-copy-target="eas-install-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button></div>
+              </div>
+              <pre><code id="eas-install-code">npm install -g eas-cli</code></pre>
+            </div>
+            <div class="code-shell">
+              <div class="code-toolbar">
+                <span class="code-toolbar-label">Login Expo</span>
+                <div class="code-toolbar-actions"><button type="button" class="code-action copy-trigger" data-copy-target="expo-login-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button></div>
+              </div>
+              <pre><code id="expo-login-code">eas login</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-eas-config" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 6</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Configurar EAS Build no projeto 🧰</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">No diretório do projeto, rode a configuração inicial e escolha Android quando o assistente perguntar a plataforma.</p>
+          </div>
+          <div class="code-shell">
+            <div class="code-toolbar">
+              <span class="code-toolbar-label">Configurar build</span>
+              <div class="code-toolbar-actions"><button type="button" class="code-action copy-trigger" data-copy-target="eas-config-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button></div>
+            </div>
+            <pre><code id="eas-config-code">eas build:configure</code></pre>
+          </div>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">development</p><p class="mt-2 text-sm leading-7 text-muted">Útil para desenvolvimento com cliente nativo.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">preview</p><p class="mt-2 text-sm leading-7 text-muted">Bom para teste interno fora da loja.</p></div>
+            <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5"><p class="text-sm font-bold text-white">production</p><p class="mt-2 text-sm leading-7 text-muted">Perfil usado para publicar no Google Play.</p></div>
+          </div>
+        </section>
+
+        <section id="step-credentials" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 7</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Configurar credenciais Android 🔑</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">O EAS pode gerar e gerenciar a keystore automaticamente. Para a maioria dos projetos, esse é o caminho mais simples no primeiro deploy.</p>
+          </div>
+          <div class="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+            <div class="code-shell">
+              <div class="code-toolbar">
+                <span class="code-toolbar-label">Revisar credenciais</span>
+                <div class="code-toolbar-actions"><button type="button" class="code-action copy-trigger" data-copy-target="credentials-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button></div>
+              </div>
+              <pre><code id="credentials-code">eas credentials</code></pre>
+            </div>
+            <div class="rounded-3xl border border-border bg-card/70 p-6">
+              <h3 class="text-xl font-bold text-white">O que aparece aqui?</h3>
+              <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+                <p>🔐 <strong class="text-white">Keystore Android:</strong> usada para assinar o app.</p>
+                <p>🗝️ <strong class="text-white">Upload key:</strong> pode ser usada com Play App Signing.</p>
+                <p>🧭 <strong class="text-white">Gerenciamento automático:</strong> reduz chance de perder arquivos críticos.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-build" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 8</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Fazer o build Android 🏗️</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Agora o EAS compila seu app nos servidores da Expo. Para Google Play, prefira gerar um arquivo <code>.aab</code>.</p>
+          </div>
+          <div class="code-shell">
+            <div class="code-toolbar">
+              <span class="code-toolbar-label">Build de produção Android</span>
+              <div class="code-toolbar-actions">
+                <button type="button" class="code-action copy-trigger" data-copy-target="build-code"><i data-lucide="copy" class="h-4 w-4"></i><span>Copiar</span></button>
+                <button type="button" class="code-action expand-trigger" data-expand-title="Build Android" data-expand-target="build-code"><i data-lucide="file-code-2" class="h-4 w-4"></i><span>Expandir</span></button>
+              </div>
+            </div>
+            <pre><code id="build-code">eas build --platform android --profile production</code></pre>
+          </div>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">⏳ Aguarde</p><p class="mt-2 text-sm leading-7 text-muted">A compilação roda na nuvem e pode levar alguns minutos.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">🔗 Link final</p><p class="mt-2 text-sm leading-7 text-muted">O EAS retorna um link para baixar o build.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">📦 Artefato</p><p class="mt-2 text-sm leading-7 text-muted">Use `.aab` para Google Play e `.apk` para testes manuais.</p></div>
+          </div>
+        </section>
+
+        <section id="step-create-app" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 9</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Criar o app no Google Play Console 📱</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">No Play Console, clique em criar app e informe os dados básicos: nome, idioma padrão, tipo de app e se ele é gratuito ou pago.</p>
+          </div>
+          <div class="grid gap-6 lg:grid-cols-4">
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">01</p><p class="mt-2 text-sm font-semibold text-white">Criar app</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">02</p><p class="mt-2 text-sm font-semibold text-white">Nome e idioma</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">03</p><p class="mt-2 text-sm font-semibold text-white">Tipo e categoria</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-xs uppercase tracking-[0.18em] text-muted">04</p><p class="mt-2 text-sm font-semibold text-white">Política de privacidade</p></div>
+          </div>
+        </section>
+
+        <section id="step-release" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-accent">Passo 10</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Enviar build, metadados e gráficos 📝</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">A release precisa do arquivo gerado pelo EAS, notas de versão e ficha da loja. Essa parte é onde o app começa a parecer público.</p>
+          </div>
+          <div class="grid gap-6 xl:grid-cols-2">
+            <div class="rounded-3xl border border-border bg-card/70 p-6">
+              <h3 class="text-xl font-bold text-white">Release</h3>
+              <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+                <p>1. Acesse Release &gt; Produção ou Teste.</p>
+                <p>2. Crie uma nova release.</p>
+                <p>3. Faça upload do `.aab` recomendado.</p>
+                <p>4. Complete as notas de versão.</p>
+                <p>5. Salve e revise.</p>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-info/25 bg-info/10 p-6">
+              <h3 class="text-xl font-bold text-white">Ficha da loja</h3>
+              <div class="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+                <p>🖼️ Screenshots</p>
+                <p>📌 Ícone e recursos gráficos</p>
+                <p>📝 Descrição curta e completa</p>
+                <p>🔒 Privacidade, classificação e políticas</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-review" class="step-content space-y-6">
+          <div class="section-soft rounded-3xl border border-border bg-card/70 p-6 sm:p-7">
+            <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-info">Fechamento</p>
+            <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Liberar para teste ou produção ✅</h2>
+            <p class="mt-4 max-w-4xl text-sm leading-8 text-slate-300 sm:text-base">Você pode publicar primeiro em teste interno, fechado ou aberto. Depois de validar, envie para produção e acompanhe a revisão do Google Play.</p>
+          </div>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">🧪 Teste interno</p><p class="mt-2 text-sm leading-7 text-muted">Ideal para validar instalação e fluxo principal.</p></div>
+            <div class="rounded-2xl border border-border bg-card/70 p-5"><p class="text-sm font-bold text-white">👥 Teste fechado/aberto</p><p class="mt-2 text-sm leading-7 text-muted">Bom para ampliar validação com usuários selecionados.</p></div>
+            <div class="rounded-2xl border border-accent/25 bg-accent/10 p-5"><p class="text-sm font-bold text-white">🚀 Produção</p><p class="mt-2 text-sm leading-7 text-muted">Envie quando metadados, política e build estiverem prontos.</p></div>
+          </div>
+          <div class="rounded-3xl border border-border bg-base/55 p-6">
+            <p class="text-sm leading-8 text-slate-300">Se houver pendências na revisão, corrija o item apontado pelo console, gere uma nova versão quando necessário e reenvie a release.</p>
+          </div>
+          <div class="rounded-3xl border border-border bg-card/70 p-6">
+            <h3 class="text-xl font-bold text-white">Referências oficiais</h3>
+            <div class="mt-4 grid gap-3 text-sm leading-7 text-slate-300 md:grid-cols-2">
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://support.google.com/accounts/answer/27441" target="_blank" rel="noreferrer">Criar uma Conta Google</a>
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://support.google.com/accounts/answer/185839" target="_blank" rel="noreferrer">Verificação em duas etapas</a>
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://play.google.com/console" target="_blank" rel="noreferrer">Google Play Console</a>
+              <a class="rounded-2xl border border-border bg-base/45 p-4 text-accent underline decoration-accent/40 underline-offset-4" href="https://docs.expo.dev/build/setup/" target="_blank" rel="noreferrer">Expo EAS Build</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="code-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 p-4 md:p-6" onclick="handleCodeModalBackdrop(event)">
+    <div class="mx-auto flex h-full max-w-6xl flex-col rounded-3xl border border-border bg-panel shadow-2xl shadow-black/50">
+      <div class="flex items-center justify-between gap-3 border-b border-border px-4 py-4 md:px-6">
+        <div class="min-w-0">
+          <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-muted">Visualização expandida</p>
+          <h3 id="code-modal-title" class="truncate text-base font-semibold text-white md:text-lg">Trecho de código</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="code-modal-copy" type="button" class="code-action" aria-label="Copiar código aberto na janela">
+            <i data-lucide="copy" class="h-4 w-4"></i>
+            <span>Copiar</span>
+          </button>
+          <button type="button" onclick="closeCodeModal()" class="code-action" aria-label="Fechar visualização expandida">
+            <i data-lucide="x" class="h-4 w-4"></i>
+            <span>Fechar</span>
+          </button>
+        </div>
+      </div>
+      <div class="min-h-0 flex-1 p-4 md:p-6">
+        <pre id="code-modal-pre" class="code-modal-pre"><code id="code-modal-code"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 p-4 md:p-6" onclick="handleInfoModalBackdrop(event)">
+    <div class="mx-auto flex h-full max-w-3xl flex-col rounded-3xl border border-border bg-panel shadow-2xl shadow-black/50">
+      <div class="flex items-center justify-between gap-3 border-b border-border px-4 py-4 md:px-6">
+        <div class="min-w-0">
+          <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-accent">Mais detalhes</p>
+          <h3 id="info-modal-title" class="truncate text-base font-semibold text-white md:text-lg">Explicação</h3>
+        </div>
+        <button type="button" onclick="closeInfoModal()" class="code-action" aria-label="Fechar detalhes">
+          <i data-lucide="x" class="h-4 w-4"></i>
+          <span>Fechar</span>
+        </button>
+      </div>
+      <div class="min-h-0 flex-1 overflow-y-auto px-4 py-5 md:px-6 md:py-6">
+        <div id="info-modal-body" class="space-y-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const drawer = document.getElementById("sidebar-drawer");
+    const backdrop = document.getElementById("sidebar-backdrop");
+    const codeModal = document.getElementById("code-modal");
+    const codeModalTitle = document.getElementById("code-modal-title");
+    const codeModalCode = document.getElementById("code-modal-code");
+    const codeModalCopy = document.getElementById("code-modal-copy");
+    const infoModal = document.getElementById("info-modal");
+    const infoModalTitle = document.getElementById("info-modal-title");
+    const infoModalBody = document.getElementById("info-modal-body");
+
+    function syncBodyOverflow() {
+      const sidebarOpen = drawer.classList.contains("open");
+      const codeModalOpen = !codeModal.classList.contains("hidden");
+      const infoModalOpen = !infoModal.classList.contains("hidden");
+      document.body.style.overflow = sidebarOpen || codeModalOpen || infoModalOpen ? "hidden" : "";
+    }
+
+    function getButtonLabelNode(button) {
+      return button.querySelector("span") || button;
+    }
+
+    function openSidebar() {
+      drawer.classList.add("open");
+      backdrop.classList.remove("hidden");
+      syncBodyOverflow();
+    }
+
+    function closeSidebar() {
+      drawer.classList.remove("open");
+      backdrop.classList.add("hidden");
+      syncBodyOverflow();
+    }
+
+    function toggleNavGroup(groupName) {
+      const group = document.querySelector('[data-group="' + groupName + '"]');
+      if (!group) return;
+      group.classList.toggle("open");
+    }
+
+    function showStep(stepId) {
+      document.querySelectorAll(".step-content").forEach((el) => el.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach((el) => el.classList.remove("active"));
+
+      const content = document.getElementById(stepId);
+      const trigger = document.querySelector('[data-step="' + stepId + '"]');
+      if (!content || !trigger) return;
+
+      content.classList.add("active");
+      trigger.classList.add("active");
+
+      const main = document.querySelector("main");
+      if (main) main.scrollTop = 0;
+      if (window.innerWidth < 768) closeSidebar();
+    }
+
+    function fallbackCopy(text) {
+      const temp = document.createElement("textarea");
+      temp.value = text;
+      temp.setAttribute("readonly", "");
+      temp.style.position = "absolute";
+      temp.style.left = "-9999px";
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      document.body.removeChild(temp);
+    }
+
+    async function copyText(text, button) {
+      const labelNode = getButtonLabelNode(button);
+      const originalLabel = labelNode.textContent;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          fallbackCopy(text);
+        }
+        labelNode.textContent = "Copiado";
+      } catch (error) {
+        labelNode.textContent = "Falhou";
+      }
+
+      window.setTimeout(() => {
+        labelNode.textContent = originalLabel;
+      }, 1500);
+    }
+
+    function openCodeModal(title, text) {
+      codeModalTitle.textContent = title;
+      codeModalCode.textContent = text;
+      codeModal.classList.remove("hidden");
+      codeModalCopy.onclick = () => copyText(text, codeModalCopy);
+      syncBodyOverflow();
+    }
+
+    function closeCodeModal() {
+      codeModal.classList.add("hidden");
+      codeModalCode.textContent = "";
+      syncBodyOverflow();
+    }
+
+    function handleCodeModalBackdrop(event) {
+      if (event.target === codeModal) closeCodeModal();
+    }
+
+    function openInfoModal(title, body) {
+      infoModalTitle.textContent = title;
+      infoModalBody.innerHTML = "";
+
+      const panel = document.createElement("div");
+      panel.className = "rounded-2xl border border-border bg-base/55 p-5";
+      const segments = String(body || "")
+        .split("||")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      if (!segments.length) {
+        const copy = document.createElement("p");
+        copy.className = "text-sm leading-8 text-slate-300";
+        copy.textContent = body;
+        panel.appendChild(copy);
+      } else {
+        const stack = document.createElement("div");
+        stack.className = "space-y-3";
+
+        segments.forEach((segment) => {
+          const item = document.createElement("div");
+          item.className = "rounded-2xl border border-border bg-card/70 p-4";
+
+          const copy = document.createElement("p");
+          copy.className = "text-sm leading-8 text-slate-300";
+          copy.textContent = segment;
+
+          item.appendChild(copy);
+          stack.appendChild(item);
+        });
+
+        panel.appendChild(stack);
+      }
+
+      infoModalBody.appendChild(panel);
+      infoModal.classList.remove("hidden");
+      syncBodyOverflow();
+    }
+
+    function closeInfoModal() {
+      infoModal.classList.add("hidden");
+      infoModalTitle.textContent = "Explicação";
+      infoModalBody.innerHTML = "";
+      syncBodyOverflow();
+    }
+
+    function handleInfoModalBackdrop(event) {
+      if (event.target === infoModal) closeInfoModal();
+    }
+
+    document.querySelectorAll(".copy-trigger").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        if (!target) return;
+        copyText(target.textContent, button);
+      });
+    });
+
+    document.querySelectorAll(".expand-trigger").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.expandTarget);
+        if (!target) return;
+        openCodeModal(button.dataset.expandTitle || "Trecho de código", target.textContent);
+      });
+    });
+
+    document.querySelectorAll(".info-trigger").forEach((button) => {
+      button.addEventListener("click", () => {
+        openInfoModal(button.dataset.infoTitle || "Explicação", button.dataset.infoBody || "");
+      });
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) closeSidebar();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (!codeModal.classList.contains("hidden")) {
+        closeCodeModal();
+        return;
+      }
+      if (!infoModal.classList.contains("hidden")) {
+        closeInfoModal();
+        return;
+      }
+      closeSidebar();
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
